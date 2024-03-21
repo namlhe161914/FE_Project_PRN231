@@ -230,7 +230,7 @@ https://templatemo.com/tm-590-topic-listing
             var jobId = getQueryParameter("id");
             async function getUserInfo() {
                 const token = localStorage.getItem('Token');
-                const response = await fetch("https://localhost:7216/api/Auth/UserInfo", {
+                const response = await fetch("https://demoassign1prn231.azurewebsites.net/api/Auth/UserInfo", {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -248,7 +248,7 @@ https://templatemo.com/tm-590-topic-listing
 
             async function initializeForm() {
                 const accId = await getUserInfo();
-                $.get('https://localhost:7216/api/CV/GetCvsByAccount/' + accId, function (data) {
+                $.get('https://demoassign1prn231.azurewebsites.net/api/CV/GetCvsByAccount/' + accId, function (data) {
                     // Xử lý dữ liệu trả về từ API
                     //   accountList.empty();
 
@@ -289,7 +289,7 @@ https://templatemo.com/tm-590-topic-listing
                             var accountId = accId; // Đảm bảo accId đã được khởi tạo và có giá trị
 
                             // Gửi yêu cầu POST đến API
-                            fetch('https://localhost:7216/api/CV/CreateCv?accountId=' + accountId, {
+                            fetch('https://demoassign1prn231.azurewebsites.net/api/CV/CreateCv?accountId=' + accountId, {
                                 method: 'POST',
                                 body: formData
                             })
@@ -315,7 +315,7 @@ https://templatemo.com/tm-590-topic-listing
 
 
             if (accountId != null) {
-                $.get('https://localhost:7216/api/CV/GetCvsByAccount/' + accountId, function (data) {
+                $.get('https://demoassign1prn231.azurewebsites.net/api/CV/GetCvsByAccount/' + accountId, function (data) {
                     // Xử lý dữ liệu trả về từ API
                     //   accountList.empty();
 
@@ -341,7 +341,7 @@ https://templatemo.com/tm-590-topic-listing
 
 
             if (jobId != null) {
-                $.get('https://localhost:7216/api/CV/GetCvsByJob/' + jobId, function (data) {
+                $.get('https://demoassign1prn231.azurewebsites.net/api/CV/GetCvsByJob/' + jobId, function (data) {
                     // Xử lý dữ liệu trả về từ API
                     //   accountList.empty();
 
@@ -376,7 +376,7 @@ https://templatemo.com/tm-590-topic-listing
         });
         function deleteCV(cvId) {
             // Gọi API xóa CV với ID tương ứng
-            fetch('https://localhost:7216/api/CV/' + cvId, {
+            fetch('https://demoassign1prn231.azurewebsites.net/api/CV/' + cvId, {
                 method: 'DELETE'
             })
                 .then(response => response.json())
@@ -390,7 +390,7 @@ https://templatemo.com/tm-590-topic-listing
                 });
         }
         function deleteRequest(cvId) {
-            var apiUrl = 'https://localhost:7216/api/Apply';
+            var apiUrl = 'https://demoassign1prn231.azurewebsites.net/api/Apply';
 
             // Lấy danh sách apply qua API
             fetch(apiUrl)
@@ -399,7 +399,7 @@ https://templatemo.com/tm-590-topic-listing
                     // Tìm và xóa apply có cvId trùng với tham số cvId
                     var applyToDelete = data.find(apply => apply.cvId === cvId);
                     if (applyToDelete) {
-                        var deleteUrl = `https://localhost:7216/api/Apply/${applyToDelete.applyId}`;
+                        var deleteUrl = `https://demoassign1prn231.azurewebsites.net/api/Apply/${applyToDelete.applyId}`;
 
                         // Gửi yêu cầu xóa apply qua API
                         fetch(deleteUrl, { method: 'DELETE' })
@@ -433,7 +433,7 @@ https://templatemo.com/tm-590-topic-listing
         const authActionLink = document.getElementById('auth-action');
 
         async function getUserInfo() {
-            const response = await fetch("https://localhost:7216/api/Auth/UserInfo", {
+            const response = await fetch("https://demoassign1prn231.azurewebsites.net/api/Auth/UserInfo", {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

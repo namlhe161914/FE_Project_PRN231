@@ -295,7 +295,7 @@ https://templatemo.com/tm-590-topic-listing
 
             async function getUserInfo() {
                 const token = localStorage.getItem('Token');
-                const response = await fetch("https://localhost:7216/api/Auth/UserInfo", {
+                const response = await fetch("https://demoassign1prn231.azurewebsites.net/api/Auth/UserInfo", {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -318,14 +318,14 @@ https://templatemo.com/tm-590-topic-listing
                         return;
                     }
                     // const response=null;
-                    let response = await $.get('https://localhost:7216/api/job/GetJobsByAccountId/' + accId);
-                    const response2 = await $.get('https://localhost:7216/api/Accounts/' + accId);
+                    let response = await $.get('https://demoassign1prn231.azurewebsites.net/api/job/GetJobsByAccountId/' + accId);
+                    const response2 = await $.get('https://demoassign1prn231.azurewebsites.net/api/Accounts/' + accId);
 
                     console.log(response2.role);
                     if (response2.role == "Recruiter") {
-                        response = await $.get('https://localhost:7216/api/job/GetJobsByAccountId/' + accId);
+                        response = await $.get('https://demoassign1prn231.azurewebsites.net/api/job/GetJobsByAccountId/' + accId);
                     } else {
-                        response = await $.get('https://localhost:7216/api/job/GetJobs');
+                        response = await $.get('https://demoassign1prn231.azurewebsites.net/api/job/GetJobs');
 
                         // const applicationNum = document.querySelector('#applicationNum');
                         // if (applicationNum) {
@@ -390,7 +390,7 @@ https://templatemo.com/tm-590-topic-listing
         const authActionLink = document.getElementById('auth-action');
 
         async function getUserInfo() {
-            const response = await fetch("https://localhost:7216/api/Auth/UserInfo", {
+            const response = await fetch("https://demoassign1prn231.azurewebsites.net/api/Auth/UserInfo", {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

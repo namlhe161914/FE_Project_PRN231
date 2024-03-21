@@ -387,7 +387,7 @@ https://templatemo.com/tm-590-topic-listing
             function searchAccounts() {
                 var keyword = keywordInput.val();
 
-                $.get('https://localhost:7216/api/Accounts', function (data) {
+                $.get('https://demoassign1prn231.azurewebsites.net/api/Accounts', function (data) {
                     // Xử lý dữ liệu trả về từ API
                     accountList.empty();
 
@@ -428,7 +428,7 @@ https://templatemo.com/tm-590-topic-listing
         const authActionLink = document.getElementById('auth-action');
 
         async function getUserInfo() {
-            const response = await fetch("https://localhost:7216/api/Auth/UserInfo", {
+            const response = await fetch("https://demoassign1prn231.azurewebsites.net/api/Auth/UserInfo", {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

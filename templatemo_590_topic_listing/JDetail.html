@@ -311,7 +311,7 @@ https://templatemo.com/tm-590-topic-listing
         var form = document.getElementById('addJob');
         async function getUserInfo() {
             const token = localStorage.getItem('Token');
-            const response = await fetch("https://localhost:7216/api/Auth/UserInfo", {
+            const response = await fetch("https://demoassign1prn231.azurewebsites.net/api/Auth/UserInfo", {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -331,7 +331,7 @@ https://templatemo.com/tm-590-topic-listing
 
             if (jobId != null) {
                 deleteButton.removeAttribute('hidden');
-                fetch('https://localhost:7216/api/job/' + jobId)
+                fetch('https://demoassign1prn231.azurewebsites.net/api/job/' + jobId)
                     .then(response => response.json())
                     .then(data => {
                         // Điền thông tin công việc vào các trường của biểu mẫu
@@ -355,7 +355,7 @@ https://templatemo.com/tm-590-topic-listing
 
                     if (jobId != null) {
                         // Gọi API để lấy danh sách CV của tài khoản
-                        fetch('https://localhost:7216/api/CV/GetCvsByAccount/' + accId)
+                        fetch('https://demoassign1prn231.azurewebsites.net/api/CV/GetCvsByAccount/' + accId)
                             .then(response => response.json())
                             .then(data => {
                                 // Hiển thị danh sách CV
@@ -426,7 +426,7 @@ https://templatemo.com/tm-590-topic-listing
                     alert('Start date must be < End date. Try again.');
                 } else {
                     if (jobId != null) {
-                        fetch('https://localhost:7216/api/job/UpdateJob/' + jobId, {
+                        fetch('https://demoassign1prn231.azurewebsites.net/api/job/UpdateJob/' + jobId, {
                             method: 'PUT', // Hoặc sử dụng 'PATCH' nếu chỉ muốn cập nhật một phần thông tin
                             headers: {
                                 'Content-Type': 'application/json'
@@ -450,7 +450,7 @@ https://templatemo.com/tm-590-topic-listing
                                 // Xử lý lỗi theo cách phù hợp
                             });
                     } else {
-                        fetch('https://localhost:7216/api/job/CreateJob', {
+                        fetch('https://demoassign1prn231.azurewebsites.net/api/job/CreateJob', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -510,8 +510,8 @@ https://templatemo.com/tm-590-topic-listing
                 jobId: jobId
             };
 
-            // Gửi yêu cầu apply CV đến endpoint "https://localhost:7216/api/Apply"
-            fetch('https://localhost:7216/api/Apply', {
+            // Gửi yêu cầu apply CV đến endpoint "https://demoassign1prn231.azurewebsites.net/api/Apply"
+            fetch('https://demoassign1prn231.azurewebsites.net/api/Apply', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -541,7 +541,7 @@ https://templatemo.com/tm-590-topic-listing
 
         function deleteJob() {
             // Gửi yêu cầu xóa công việc đến máy chủ
-            fetch('https://localhost:7216/api/job/' + jobId, {
+            fetch('https://demoassign1prn231.azurewebsites.net/api/job/' + jobId, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
@@ -592,7 +592,7 @@ https://templatemo.com/tm-590-topic-listing
         const authActionLink = document.getElementById('auth-action');
 
         async function getUserInfo() {
-            const response = await fetch("https://localhost:7216/api/Auth/UserInfo", {
+            const response = await fetch("https://demoassign1prn231.azurewebsites.net/api/Auth/UserInfo", {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
