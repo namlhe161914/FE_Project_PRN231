@@ -381,7 +381,7 @@ https://templatemo.com/tm-590-topic-listing
                         learnMore2.on('click', function () {
                             var confirmation = confirm('Delete this Request?');
                             if (confirmation) {
-                                deleteRequest(cv.cvId);
+                                deleteRequest(cv.cvId, jobId);
                                 customBlock.remove();
                             }
                         });
@@ -491,17 +491,17 @@ https://templatemo.com/tm-590-topic-listing
                     console.error(error);
                 });
         }
-        function deleteRequest(cvId) {
-            var apiUrl = 'https://demoassign1prn231.azurewebsites.net/api/Apply';
-
+        function deleteRequest(cvId, jobId) {
+            // var apiUrl = 'https://demoassign1prn231.azurewebsites.net/GetApplyByJobId/';
+            console.log(jobId);
             // Lấy danh sách apply qua API
-            fetch(apiUrl)
+            fetch('https://demoassign1prn231.azurewebsites.net/Apply/GetApplyByJobId/' + jobId)
                 .then(response => response.json())
                 .then(data => {
                     // Tìm và xóa apply có cvId trùng với tham số cvId
                     var applyToDelete = data.find(apply => apply.cvId === cvId);
                     if (applyToDelete) {
-                        var deleteUrl = `https://demoassign1prn231.azurewebsites.net/api/Apply/${applyToDelete.applyId}`;
+                        var deleteUrl = `https://demoassign1prn231.azurewebsites.net/Apply/${applyToDelete.applyId}`;
 
                         // Gửi yêu cầu xóa apply qua API
                         fetch(deleteUrl, { method: 'DELETE' })
