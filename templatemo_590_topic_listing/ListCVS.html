@@ -387,12 +387,13 @@ https://templatemo.com/tm-590-topic-listing
                         });
                         learnMore3.on('click', async function () {
                             try {
-                                console.log(cv.cvLink);
+                                
                                 const newPathPDF = cv.cvLink.replace(
                                     "https://demoassign1prn231.azurewebsites.net",
                                     "C:\\home\\site\\wwwroot"
                                 ).replace(/\//g, "\\");
-
+                                
+                                console.log(newPathPDF);    
                                 const getDesJob = await fetch(`https://demoassign1prn231.azurewebsites.net/api/job/${jobId}`, {
                                     method: 'GET'
                                 });
@@ -400,7 +401,7 @@ https://templatemo.com/tm-590-topic-listing
                                 const jsonData = await getDesJob.json();
                                 const jobDesc = jsonData.jobDesc;
 
-                                const apiResponse = await fetch(`https://demoassign1prn231.azurewebsites.net/api/ReviewCV?pathFile=${cv.cvLink}`, {
+                                const apiResponse = await fetch(`https://demoassign1prn231.azurewebsites.net/api/ReviewCV?pathFile=${newPathPDF}`, {
                                     method: 'POST'
                                 });
 
