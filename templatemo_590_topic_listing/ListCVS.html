@@ -400,7 +400,7 @@ https://templatemo.com/tm-590-topic-listing
                                 const jsonData = await getDesJob.json();
                                 const jobDesc = jsonData.jobDesc;
 
-                                const apiResponse = await fetch(`https://localhost:7216/api/ReviewCV?pathFile=${cv.cvLink}`, {
+                                const apiResponse = await fetch(`https://demoassign1prn231.azurewebsites.net/api/ReviewCV?pathFile=${cv.cvLink}`, {
                                     method: 'POST'
                                 });
 
