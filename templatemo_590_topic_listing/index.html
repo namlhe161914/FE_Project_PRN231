@@ -874,18 +874,21 @@ https://templatemo.com/tm-590-topic-listing
 
             if (response.ok) {
                 const data = await response.json();
-                document.querySelector('.user-info').textContent = data.name;
+                if (data.status == 1) {
+                    document.querySelector('.user-info').textContent = data.name;
 
-                // User is logged in
-                authActionLink.textContent = "Log Out";
-                authActionLink.href = "../Login.html";
-                const cv = document.getElementById('cv');
-                if (data.role === 'Applicant') {
-                    // console.log("aasasa");
-                    cv.href = "ListCVS.html";
+                    // User is logged in
+                    authActionLink.textContent = "Log Out";
+                    authActionLink.href = "../Login.html";
+                    const cv = document.getElementById('cv');
+
+                    if (data.role === 'Applicant') {
+                        cv.href = "ListCVS.html";
+                    } else {
+                        cv.href = "ViewCV.html";
+                    }
                 } else {
-                    cv.href = "ViewCV.html";
-                    // console.log("cccc");
+                    window.location.href = "../Login.html";
                 }
             } else {
                 authActionLink.textContent = "Login";

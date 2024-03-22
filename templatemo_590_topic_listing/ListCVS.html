@@ -131,13 +131,30 @@ https://templatemo.com/tm-590-topic-listing
 
         <section class="section-padding section-bg">
             <div class="container">
-                <div class="row">
+                <div class="row" style="display: flex;">
 
 
                     <div id="CV-list" class="col-lg-8 col-12 mt-3 mx-auto">
 
                     </div>
 
+                    <div id="response" class="col-md-4">
+                        <p class="result-text">
+                        </p>
+                    </div>
+                    <style>
+                        .result-text {
+                            font-family: Arial, sans-serif;
+                            font-size: 16px;
+                            font-weight: bold;
+                            color: #333;
+                            padding: 10px;
+                            border: 1px solid #ccc;
+                            border-radius: 5px;
+                            white-space: pre-wrap;
+                            /* Add this line */
+                        }
+                    </style>
                 </div>
             </div>
         </section>
@@ -230,7 +247,7 @@ https://templatemo.com/tm-590-topic-listing
             var jobId = getQueryParameter("id");
             async function getUserInfo() {
                 const token = localStorage.getItem('Token');
-                const response = await fetch("https://demoassign1prn231.azurewebsites.net/api/Auth/UserInfo", {
+                const response = await fetch("https://localhost:7216/api/Auth/UserInfo", {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -244,11 +261,11 @@ https://templatemo.com/tm-590-topic-listing
                     return null;
                 }
             }
-            console.log(accountId);
+            // console.log(accountId);
 
             async function initializeForm() {
                 const accId = await getUserInfo();
-                $.get('https://demoassign1prn231.azurewebsites.net/api/CV/GetCvsByAccount/' + accId, function (data) {
+                $.get('https://localhost:7216/api/CV/GetCvsByAccount/' + accId, function (data) {
                     // Xử lý dữ liệu trả về từ API
                     //   accountList.empty();
 
@@ -289,7 +306,7 @@ https://templatemo.com/tm-590-topic-listing
                             var accountId = accId; // Đảm bảo accId đã được khởi tạo và có giá trị
 
                             // Gửi yêu cầu POST đến API
-                            fetch('https://demoassign1prn231.azurewebsites.net/api/CV/CreateCv?accountId=' + accountId, {
+                            fetch('https://localhost:7216/api/CV/CreateCv?accountId=' + accountId, {
                                 method: 'POST',
                                 body: formData
                             })
@@ -309,13 +326,13 @@ https://templatemo.com/tm-590-topic-listing
                     });
                     CVList.append(addCV);
                 });
-                console.log(accId);
+                // console.log(accId);
             }
             if (accountId === null && jobId === null) { initializeForm(); }
 
 
             if (accountId != null) {
-                $.get('https://demoassign1prn231.azurewebsites.net/api/CV/GetCvsByAccount/' + accountId, function (data) {
+                $.get('https://localhost:7216/api/CV/GetCvsByAccount/' + accountId, function (data) {
                     // Xử lý dữ liệu trả về từ API
                     //   accountList.empty();
 
@@ -341,7 +358,7 @@ https://templatemo.com/tm-590-topic-listing
 
 
             if (jobId != null) {
-                $.get('https://demoassign1prn231.azurewebsites.net/api/CV/GetCvsByJob/' + jobId, function (data) {
+                $.get('https://localhost:7216/api/CV/GetCvsByJob/' + jobId, function (data) {
                     // Xử lý dữ liệu trả về từ API
                     //   accountList.empty();
 
@@ -355,7 +372,8 @@ https://templatemo.com/tm-590-topic-listing
                         var title = $('<h5>').addClass('mb-2').text(cv.cvName);
                         var learnMore = $('<a>').attr('href', cv.cvLink).addClass('btn custom-btn mt-3 mt-lg-4 openCV').text('Open CV');
                         var learnMore2 = $('<a>').attr('href', "#").addClass('btn custom-btn mt-3 mt-lg-4').text('Delete Request');
-                        infoDiv.append(title, learnMore, learnMore2);
+                        var learnMore3 = $('<a>').attr('href', "#").addClass('btn custom-btn mt-3 mt-lg-4').text('Compare Request');
+                        infoDiv.append(title, learnMore, learnMore2, learnMore3);
                         listingInfo.append(infoDiv);
                         dFlex.append(image, listingInfo);
                         customBlock.append(dFlex);
@@ -367,6 +385,85 @@ https://templatemo.com/tm-590-topic-listing
                                 customBlock.remove();
                             }
                         });
+                        learnMore3.on('click', async function () {
+                            try {
+                                console.log(cv.cvLink);
+
+                                const getDesJob = await fetch(`https://localhost:7216/api/job/${jobId}`, {
+                                    method: 'GET'
+                                });
+
+                                const jsonData = await getDesJob.json();
+                                const jobDesc = jsonData.jobDesc;
+
+                                const apiResponse = await fetch(`https://localhost:7216/api/ReviewCV?pathFile=${cv.cvLink}`, {
+                                    method: 'POST'
+                                });
+
+                                if (apiResponse.ok) {
+                                    const apiData = await apiResponse.text();
+                                    const base64Image = apiData;
+
+                                    const prompt = "Bạn hãy đánh giá CV này xem có phù hợp với yêu cầu dưới đây không:" + jobDesc;
+                                    console.log(prompt);
+                                    const data = {
+                                        contents: [
+                                            {
+                                                parts: [
+                                                    { text: prompt },
+                                                    {
+                                                        inline_data: {
+                                                            mime_type: "image/jpeg",
+                                                            data: base64Image
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    };
+
+                                    // Gửi request trực tiếp đến API đánh giá ảnh
+                                    try {
+                                        const apiKey123 = 'AIzaSyDiX0aRmErr1-iX3SdUYIQk3tqeAndbGk8';
+                                        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${apiKey123}`, {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify(data)
+                                        });
+
+                                        if (response.ok) {
+                                            const responseText = await response.text();
+                                            //document.querySelector('#response').textContent = responseText;
+
+                                            const jsonData = JSON.parse(responseText);
+                                            const text = jsonData.candidates[0].content.parts[0].text;
+                                            console.log(text);
+                                            document.querySelector('#response').innerHTML = `
+        <p class="result-text">
+            ${text}
+        </p>
+    `;
+                                        } else {
+                                            //document.querySelector('#response').textContent = 'Failed to get response from the API.';
+                                        }
+
+                                    } catch (error) {
+                                        // document.querySelector('#response').textContent = 'An error occurred: ' + error;
+                                    }
+
+
+                                } else {
+                                    console.error('Failed to get data from API:', apiResponse.status);
+                                    // document.querySelector('#apiResponse').textContent = 'Failed to get data from API';
+                                }
+
+                            } catch (error) {
+                                console.error('Error:', error);
+                                // document.querySelector('#apiResponse').textContent = 'An error occurred: ' + error;
+                            }
+                        });
 
                     });
                 });
@@ -376,7 +473,7 @@ https://templatemo.com/tm-590-topic-listing
         });
         function deleteCV(cvId) {
             // Gọi API xóa CV với ID tương ứng
-            fetch('https://demoassign1prn231.azurewebsites.net/api/CV/' + cvId, {
+            fetch('https://localhost:7216/api/CV/' + cvId, {
                 method: 'DELETE'
             })
                 .then(response => response.json())
@@ -390,7 +487,7 @@ https://templatemo.com/tm-590-topic-listing
                 });
         }
         function deleteRequest(cvId) {
-            var apiUrl = 'https://demoassign1prn231.azurewebsites.net/api/Apply';
+            var apiUrl = 'https://localhost:7216/api/Apply';
 
             // Lấy danh sách apply qua API
             fetch(apiUrl)
@@ -399,7 +496,7 @@ https://templatemo.com/tm-590-topic-listing
                     // Tìm và xóa apply có cvId trùng với tham số cvId
                     var applyToDelete = data.find(apply => apply.cvId === cvId);
                     if (applyToDelete) {
-                        var deleteUrl = `https://demoassign1prn231.azurewebsites.net/api/Apply/${applyToDelete.applyId}`;
+                        var deleteUrl = `https://localhost:7216/api/Apply/${applyToDelete.applyId}`;
 
                         // Gửi yêu cầu xóa apply qua API
                         fetch(deleteUrl, { method: 'DELETE' })
@@ -433,7 +530,7 @@ https://templatemo.com/tm-590-topic-listing
         const authActionLink = document.getElementById('auth-action');
 
         async function getUserInfo() {
-            const response = await fetch("https://demoassign1prn231.azurewebsites.net/api/Auth/UserInfo", {
+            const response = await fetch("https://localhost:7216/api/Auth/UserInfo", {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
