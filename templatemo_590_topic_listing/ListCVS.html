@@ -388,6 +388,10 @@ https://templatemo.com/tm-590-topic-listing
                         learnMore3.on('click', async function () {
                             try {
                                 console.log(cv.cvLink);
+                                const newPathPDF = cv.cvLink.replace(
+                                    "https://demoassign1prn231.azurewebsites.net",
+                                    "C:\\home\\site\\wwwroot"
+                                ).replace(/\//g, "\\");
 
                                 const getDesJob = await fetch(`https://demoassign1prn231.azurewebsites.net/api/job/${jobId}`, {
                                     method: 'GET'
