@@ -351,22 +351,78 @@ https://templatemo.com/tm-590-topic-listing
 
                 // Gắn sự kiện click cho nút "Apply Job"
                 document.getElementById('applyJob').addEventListener('click', function () {
+                    var CVReplace;
+
+                    // Gọi API để lấy danh sách CV của tài khoản
+                    fetch('https://demoassign1prn231.azurewebsites.net/api/CV/GetCvsByAccount/' + accId)
+                        .then(response => response.json())
+                        .then(data1 => {
+                            // Hiển thị danh sách CV
 
 
-                    if (jobId != null) {
-                        // Gọi API để lấy danh sách CV của tài khoản
-                        fetch('https://demoassign1prn231.azurewebsites.net/api/CV/GetCvsByAccount/' + accId)
-                            .then(response => response.json())
-                            .then(data => {
-                                // Hiển thị danh sách CV
-                                displayCVList(data);
-                            })
-                            .catch(error => {
-                                console.error('An error occurred:', error);
-                                // Xử lý lỗi theo cách phù hợp
-                            });
-                        console.log(accId);
-                    }
+                            if (data1.length === 0) {
+                                alert("You need to upload CV first");
+                            } else {
+                                fetch('https://demoassign1prn231.azurewebsites.net/api/CV/GetCvsByJob/' + jobId)
+                                    .then(response => response.json())
+                                    .then(data2 => {
+                                        // Tìm và xóa apply có cvId trùng với tham số cvId
+                                        CVReplace = data2.find(cv => cv.accountId === accId);
+                                        if (CVReplace) {
+
+                                            var confirmation = confirm("You have aready applied for this job. Apply again?");
+                                            if (confirmation) {
+                                                // fetch('https://demoassign1prn231.azurewebsites.net/api/Apply/GetApplyByJobId/' + jobId)
+                                                //     .then(response => response.json())
+                                                //     .then(data3 => {
+                                                //         // Tìm và xóa apply có cvId trùng với tham số cvId
+                                                //         var applyToDelete = data3.find(apply => apply.cvId === CVReplace.cvId);
+                                                //         if (applyToDelete) {
+                                                //             var deleteUrl = `https://demoassign1prn231.azurewebsites.net/api/Apply/${applyToDelete.applyId}`;
+
+                                                //             // Gửi yêu cầu xóa apply qua API
+                                                //             fetch(deleteUrl, { method: 'DELETE' })
+                                                //                 .then(response => {
+                                                //                     if (response.ok) {
+                                                //                         console.log('Apply đã được xóa thành công.');
+                                                //                     } else {
+                                                //                         console.error('Lỗi xóa apply.');
+                                                //                     }
+                                                //                 })
+                                                //                 .catch(error => {
+                                                //                     console.error('Lỗi kết nối tới API:', error);
+                                                //                 });
+                                                //         } else {
+                                                //             console.log('Không tìm thấy apply với cvId trùng khớp.');
+                                                //         }
+                                                //     })
+                                                //     .catch(error => {
+                                                //         console.error('Lỗi kết nối tới API:', error);
+                                                //     });
+                                                displayCVList(data1, CVReplace);
+                                            } else {
+                                                return;
+                                            }
+
+                                        } else {
+                                            console.log('Không tìm thấy apply với cvId trùng khớp.');
+                                            displayCVList(data1, CVReplace);
+                                            console.log(data1);
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Lỗi kết nối tới API:', error);
+                                    });
+
+                            }
+                            console.log(data);
+                        })
+                        .catch(error => {
+                            console.error('An error occurred:', error);
+                            // Xử lý lỗi theo cách phù hợp
+                        });
+                    console.log(accId);
+
                 });
 
 
@@ -407,7 +463,7 @@ https://templatemo.com/tm-590-topic-listing
                     "startDate": startDate,
                     "endDate": endDate,
                     "accountId": accId
-                    
+
                 };
                 var Job2 = {
                     "jobName": jobname,
@@ -418,7 +474,7 @@ https://templatemo.com/tm-590-topic-listing
                     "startDate": startDate,
                     "endDate": endDate,
                     "accountId": accId
-                    
+
                 };
 
                 if (startDate >= endDate) {
@@ -478,7 +534,8 @@ https://templatemo.com/tm-590-topic-listing
                 }
             });
         }
-        function displayCVList(cvList) {
+        function displayCVList(cvList, CVReplace) {
+            console.log(CVReplace)
             var cvListContainer = document.getElementById('cvList');
 
             // Xóa các phần tử CV hiện có trong danh sách
@@ -491,16 +548,47 @@ https://templatemo.com/tm-590-topic-listing
                 var cvItem = document.createElement('li');
                 cvItem.innerText = cv.cvName;
                 cvItem.addEventListener('click', function () {
-                    confirmApplyCV(cv.cvId);
+                    confirmApplyCV(cv.cvId, CVReplace);
                 });
                 cvListContainer.appendChild(cvItem);
             });
         }
-        function confirmApplyCV(cvId) {
+        function confirmApplyCV(cvId, CVReplace) {
             var confirmation = confirm('Apply this CV to the job?');
 
             if (confirmation) {
+                console.log(jobId);
+                if (CVReplace) {
+                    fetch('https://demoassign1prn231.azurewebsites.net/api/Apply/GetApplyByJobId/' + jobId)
+                        .then(response => response.json())
+                        .then(data3 => {
+                            // Tìm và xóa apply có cvId trùng với tham số cvId
+                            var applyToDelete = data3.find(apply => apply.cvId === CVReplace.cvId);
+                            if (applyToDelete) {
+                                var deleteUrl = `https://demoassign1prn231.azurewebsites.net/api/Apply/${applyToDelete.applyId}`;
+
+                                // Gửi yêu cầu xóa apply qua API
+                                fetch(deleteUrl, { method: 'DELETE' })
+                                    .then(response => {
+                                        if (response.ok) {
+                                            console.log('Apply đã được xóa thành công.');
+                                        } else {
+                                            console.error('Lỗi xóa apply.');
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Lỗi kết nối tới API:', error);
+                                    });
+                            } else {
+                                console.log('Không tìm thấy apply với cvId trùng khớp.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Lỗi kết nối tới API:', error);
+                        });
+                }
                 applyCV(cvId);
+
             }
         }
 
@@ -522,6 +610,7 @@ https://templatemo.com/tm-590-topic-listing
                     if (response.ok) {
                         // Apply thành công
                         alert('CV applied successfully');
+                        location.reload();
                         // Xử lý sau khi apply thành công, ví dụ chuyển hướng đến trang khác
                     } else {
                         // Apply thất bại
