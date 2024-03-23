@@ -492,16 +492,16 @@ https://templatemo.com/tm-590-topic-listing
                 });
         }
         function deleteRequest(cvId, jobId) {
-            // var apiUrl = 'https://demoassign1prn231.azurewebsites.net/GetApplyByJobId/';
+            // var apiUrl = 'https://demoassign1prn231.azurewebsites.net/api/GetApplyByJobId/';
             console.log(jobId);
             // Lấy danh sách apply qua API
-            fetch('https://demoassign1prn231.azurewebsites.net/Apply/GetApplyByJobId/' + jobId)
+            fetch('https://demoassign1prn231.azurewebsites.net/api/Apply/GetApplyByJobId/' + jobId)
                 .then(response => response.json())
                 .then(data => {
                     // Tìm và xóa apply có cvId trùng với tham số cvId
                     var applyToDelete = data.find(apply => apply.cvId === cvId);
                     if (applyToDelete) {
-                        var deleteUrl = `https://demoassign1prn231.azurewebsites.net/Apply/${applyToDelete.applyId}`;
+                        var deleteUrl = `https://demoassign1prn231.azurewebsites.net/api/Apply/${applyToDelete.applyId}`;
 
                         // Gửi yêu cầu xóa apply qua API
                         fetch(deleteUrl, { method: 'DELETE' })
